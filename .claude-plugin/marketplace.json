@@ -1,0 +1,16 @@
+{
+  "name": "pagecrawl",
+  "owner": {
+    "name": "PageCrawl.io",
+    "url": "https://pagecrawl.io"
+  },
+  "description": "The official PageCrawl plugin: website change monitoring for AI agents.",
+  "plugins": [
+    {
+      "name": "pagecrawl",
+      "source": "./",
+      "category": "productivity",
+      "tags": ["monitoring", "website changes", "price tracking", "alerts"]
+    }
+  ]
+}

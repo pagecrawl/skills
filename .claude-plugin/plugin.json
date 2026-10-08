@@ -1,0 +1,26 @@
+{
+  "name": "pagecrawl",
+  "displayName": "PageCrawl",
+  "version": "1.0.0",
+  "description": "Website change monitoring from your AI agent. Set up monitors for prices, stock, policies, job listings, release notes and feeds, ask what changed, and triage alerts. Connects to the PageCrawl MCP server and adds skills that teach the agent to use it well.",
+  "author": {
+    "name": "PageCrawl.io",
+    "url": "https://pagecrawl.io"
+  },
+  "homepage": "https://pagecrawl.io/mcp-server",
+  "repository": "https://github.com/pagecrawl/skills",
+  "license": "MIT",
+  "keywords": [
+    "website monitoring",
+    "change detection",
+    "price tracking",
+    "web monitoring",
+    "alerts",
+    "mcp"
+  ],
+  "icon": "./logo.png",
+  "documentationUrl": "https://pagecrawl.io/help/integrations/article/mcp-server-ai-tools",
+  "supportUrl": "https://pagecrawl.io/contact-us",
+  "privacyPolicyUrl": "https://pagecrawl.io/privacy-policy",
+  "termsOfServiceUrl": "https://pagecrawl.io/terms-and-conditions"
+}

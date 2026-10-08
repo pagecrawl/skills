@@ -1,0 +1,4 @@
+.DS_Store
+Thumbs.db
+# claude plugin eval writes its runs here
+evals/results/

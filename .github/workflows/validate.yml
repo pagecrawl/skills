@@ -1,0 +1,43 @@
+# Checks every push: the plugin manifests and skills load, the skills follow the Agent
+# Skills format, and nothing in the repository looks like a credential.
+name: Validate
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  plugin:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Plugin manifest, MCP config and skills
+        run: |
+          npm install --global @anthropic-ai/claude-code
+          claude plugin validate --strict .
+
+      - name: Agent Skills format
+        run: |
+          pipx install "git+https://github.com/agentskills/agentskills#subdirectory=skills-ref"
+          for skill in skills/*/; do
+            skills-ref validate "$skill"
+          done
+
+  secrets:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # The whole history, so a secret added and removed again is still caught.
+          fetch-depth: 0
+
+      - name: Scan
+        run: |
+          docker run --rm -v "$PWD:/repo" ghcr.io/gitleaks/gitleaks:v8.30.1 \
+            git /repo --redact --verbose --exit-code 1
