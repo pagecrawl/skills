@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.1
+
+- The webhook receivers take the signing secret as an argument instead of reading it from the environment.
+- Clearer wording in the organizing guide.
+
 ## 1.1.0
 
 - Moving monitors to another workspace, including one in another team (`manage-monitors` move), or a whole folder with its monitors (`manage-folders` reparent with `target_workspace_id`).

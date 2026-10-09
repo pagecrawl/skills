@@ -18,7 +18,7 @@ curl -X POST "https://pagecrawl.io/api/hooks" \
   -d '{"target_url": "https://your-server.example.com/pagecrawl", "match_type": "all", "event_type": "change_detected"}'
 ```
 
-The response includes `signing_secret`. Store it with your other secrets (for example `PAGECRAWL_SIGNING_SECRET`). Webhooks created in the PageCrawl app show the secret on the webhook's settings. `match_type` can also limit a webhook to chosen monitors, tags, folders or domains, and the payload fields can be trimmed in the webhook's settings.
+The response includes `signing_secret`. Keep it with your other secrets and hand it to the receiver, as the examples below do. Webhooks created in the PageCrawl app show the secret on the webhook's settings. `match_type` can also limit a webhook to chosen monitors, tags, folders or domains, and the payload fields can be trimmed in the webhook's settings.
 
 ## Verify deliveries
 
@@ -40,7 +40,6 @@ The digest is `HMAC-SHA256(signing_secret, "{timestamp}.{body}")`, where `{body}
 const crypto = require("crypto");
 const express = require("express");
 
-const SIGNING_SECRET = process.env.PAGECRAWL_SIGNING_SECRET;
 const MAX_AGE = 300; // seconds
 
 function verifySignature(secret, timestamp, rawBody, header) {
@@ -55,19 +54,23 @@ function verifySignature(secret, timestamp, rawBody, header) {
   return a.length === b.length && crypto.timingSafeEqual(a, b);
 }
 
-const app = express();
-app.post("/pagecrawl", express.raw({ type: "*/*" }), (req, res) => {
-  const raw = req.body.toString("utf8");
-  if (!verifySignature(SIGNING_SECRET, req.get("X-PageCrawl-Timestamp"), raw, req.get("X-PageCrawl-Signature"))) {
-    return res.sendStatus(401);
-  }
-  const payload = JSON.parse(raw);
-  res.sendStatus(204);
-  // Process after responding.
-  console.log("change on", payload.page?.name ?? payload.title, payload.short_summary);
-});
+// signingSecret is the webhook's signing secret, loaded from wherever you keep secrets.
+function createApp(signingSecret) {
+  const app = express();
+  app.post("/pagecrawl", express.raw({ type: "*/*" }), (req, res) => {
+    const raw = req.body.toString("utf8");
+    if (!verifySignature(signingSecret, req.get("X-PageCrawl-Timestamp"), raw, req.get("X-PageCrawl-Signature"))) {
+      return res.sendStatus(401);
+    }
+    const payload = JSON.parse(raw);
+    res.sendStatus(204);
+    // Process after responding.
+    console.log("change on", payload.page?.name ?? payload.title, payload.short_summary);
+  });
+  return app;
+}
 
-app.listen(8080);
+module.exports = { verifySignature, createApp };
 ```
 
 ## Python receiver
@@ -75,12 +78,10 @@ app.listen(8080);
 ```python
 import hashlib
 import hmac
-import os
 import time
 
 from flask import Flask, abort, request
 
-SIGNING_SECRET = os.environ["PAGECRAWL_SIGNING_SECRET"]
 MAX_AGE = 300  # seconds
 
 
@@ -98,21 +99,24 @@ def verify_signature(secret, timestamp, raw_body, header):
     return hmac.compare_digest(expected, provided)
 
 
-app = Flask(__name__)
+def create_app(signing_secret):
+    """Build the receiver with the webhook's signing secret, loaded from wherever you keep secrets."""
+    app = Flask(__name__)
 
+    @app.post("/pagecrawl")
+    def receive():
+        if not verify_signature(
+            signing_secret,
+            request.headers.get("X-PageCrawl-Timestamp"),
+            request.get_data(),
+            request.headers.get("X-PageCrawl-Signature"),
+        ):
+            abort(401)
+        payload = request.get_json()
+        print("change on", payload.get("title"), payload.get("short_summary"))
+        return "", 204
 
-@app.post("/pagecrawl")
-def receive():
-    if not verify_signature(
-        SIGNING_SECRET,
-        request.headers.get("X-PageCrawl-Timestamp"),
-        request.get_data(),
-        request.headers.get("X-PageCrawl-Signature"),
-    ):
-        abort(401)
-    payload = request.get_json()
-    print("change on", payload.get("title"), payload.get("short_summary"))
-    return "", 204
+    return app
 ```
 
 ## PHP receiver
@@ -134,15 +138,19 @@ function verify_signature(string $secret, ?string $timestamp, string $rawBody, ?
     return hash_equals($expected, $provided);
 }
 
-$rawBody = file_get_contents('php://input');
+// $signingSecret is the webhook's signing secret, loaded from wherever you keep secrets.
+function handle_pagecrawl_webhook(string $signingSecret): void
+{
+    $rawBody = file_get_contents('php://input');
 
-if (! verify_signature(getenv('PAGECRAWL_SIGNING_SECRET') ?: '', $_SERVER['HTTP_X_PAGECRAWL_TIMESTAMP'] ?? null, $rawBody, $_SERVER['HTTP_X_PAGECRAWL_SIGNATURE'] ?? null)) {
-    http_response_code(401);
-    exit;
+    if (! verify_signature($signingSecret, $_SERVER['HTTP_X_PAGECRAWL_TIMESTAMP'] ?? null, $rawBody, $_SERVER['HTTP_X_PAGECRAWL_SIGNATURE'] ?? null)) {
+        http_response_code(401);
+        exit;
+    }
+
+    $payload = json_decode($rawBody, true);
+    http_response_code(204);
 }
-
-$payload = json_decode($rawBody, true);
-http_response_code(204);
 ```
 
 In Laravel, read the raw body with `$request->getContent()` and the headers with `$request->header(...)`, and exclude the route from CSRF protection.

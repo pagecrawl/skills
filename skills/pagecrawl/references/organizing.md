@@ -22,13 +22,13 @@ Folders (`manage-folders`):
 
 Tags (`manage-tags`):
 
-- `manage-tags(action="list")` shows the current workspace's tags; pass `workspace_id` for another workspace.
+- `manage-tags(action="list")` shows the current workspace's tags, or another workspace's with `workspace_id`.
 - `manage-tags(action="add", monitor_ids=[...], tags=["pricing"])` tags up to 50 monitors in one call, and `action="remove"` untags them. Use `monitor_id` for a single monitor. The monitors can be in different workspaces: each one gets the tag of its own workspace, created there when missing.
 
 ## Editing, pausing and removing monitors
 
 - `manage-monitors(action="update", monitor_id="...", frequency=60)` changes the name, URL, frequency, notifications, screenshots, `ai_page_focus`, folder or enabled state. It cannot change what the monitor tracks; for that, create a corrected monitor.
-- `set-monitor-status(monitor_ids=[...], enabled=false)` stops checks on up to 50 monitors (or pass `monitor_id` for one) and keeps them with their history, freeing slots in the plan's active monitor count. Each monitor comes back with its own result. Turning monitors back on counts against that limit again, and enabling stops when the limit is reached.
+- `set-monitor-status(monitor_ids=[...], enabled=false)` stops checks on up to 50 monitors (`monitor_id` for one) and keeps them with their history, freeing slots in the plan's active monitor count. Each monitor comes back with its own result. Turning monitors back on counts against that limit again, and enabling stops when the limit is reached.
 - `manage-monitors(action="clear-history", monitor_id="...")` erases stored checks and values but keeps the monitor. `manage-monitors(action="delete", monitor_ids=[...])` removes monitors with all their history, screenshots and values. Both are permanent and accept up to 50 monitors: confirm first, naming the monitors.
 
 ## Templates and page discovery

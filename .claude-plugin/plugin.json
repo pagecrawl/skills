@@ -1,7 +1,7 @@
 {
   "name": "pagecrawl",
   "displayName": "PageCrawl",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Website change monitoring from your AI agent. Set up monitors for prices, stock, policies, job listings, release notes and feeds, ask what changed, and triage alerts. Connects to the PageCrawl MCP server and adds skills that teach the agent to use it well.",
   "author": {
     "name": "PageCrawl.io",
