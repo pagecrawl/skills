@@ -5,7 +5,7 @@ license: MIT
 compatibility: Requires the PageCrawl MCP server (https://mcp.pagecrawl.io/mcp), connected with OAuth or a PageCrawl API token.
 metadata:
   author: PageCrawl.io
-  version: "1.1.1"
+  version: "1.1.2"
 ---
 
 # PageCrawl

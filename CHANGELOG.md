@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.2
+
+- The PHP webhook receiver is now a short checklist that links to the complete example in the help center.
+
 ## 1.1.1
 
 - The webhook receivers take the signing secret as an argument instead of reading it from the environment.

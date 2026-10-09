@@ -121,37 +121,7 @@ def create_app(signing_secret):
 
 ## PHP receiver
 
-```php
-<?php
-
-function verify_signature(string $secret, ?string $timestamp, string $rawBody, ?string $header): bool
-{
-    if ($secret === '' || $timestamp === null || $header === null || ! ctype_digit($timestamp)) {
-        return false;
-    }
-    if (abs(time() - (int) $timestamp) > 300) {
-        return false;
-    }
-    $expected = hash_hmac('sha256', "{$timestamp}.{$rawBody}", $secret);
-    $provided = str_starts_with($header, 'sha256=') ? substr($header, 7) : $header;
-
-    return hash_equals($expected, $provided);
-}
-
-// $signingSecret is the webhook's signing secret, loaded from wherever you keep secrets.
-function handle_pagecrawl_webhook(string $signingSecret): void
-{
-    $rawBody = file_get_contents('php://input');
-
-    if (! verify_signature($signingSecret, $_SERVER['HTTP_X_PAGECRAWL_TIMESTAMP'] ?? null, $rawBody, $_SERVER['HTTP_X_PAGECRAWL_SIGNATURE'] ?? null)) {
-        http_response_code(401);
-        exit;
-    }
-
-    $payload = json_decode($rawBody, true);
-    http_response_code(204);
-}
-```
+The steps are the same as above: read the raw body with `file_get_contents('php://input')`, reject a timestamp more than 300 seconds old, compute `hash_hmac('sha256', "{timestamp}.{body}", <signing secret>)`, and compare it with the header's hex digest using `hash_equals()`. A complete PHP receiver is in https://pagecrawl.io/help/tutorials/article/reference-implementations.
 
 In Laravel, read the raw body with `$request->getContent()` and the headers with `$request->header(...)`, and exclude the route from CSRF protection.
 
