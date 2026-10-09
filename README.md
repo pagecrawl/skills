@@ -36,6 +36,10 @@ The first time a PageCrawl tool runs, a browser window opens to sign in and appr
 
 Download `pagecrawl-plugin.zip` from the [latest release](https://github.com/pagecrawl/skills/releases/latest), then go to **Customize > Plugins > Add > Upload plugin**. Connect PageCrawl from the plugin's **Connectors** tab.
 
+### ChatGPT
+
+Add PageCrawl as a connector first: **Settings > Apps & Connectors > Create**, with the server URL below, OAuth and the Streamable HTTP transport ([step-by-step guide](https://pagecrawl.io/help/integrations/article/mcp-server-ai-tools)). On Business, Enterprise, Healthcare and Edu plans, download `pagecrawl-skill.zip` from the [latest release](https://github.com/pagecrawl/skills/releases/latest), then open **Plugins**, select the **Skills** tab, click **Create** and choose **Upload from your computer**.
+
 ### Codex
 
 Copy `skills/pagecrawl` (and `skills/pagecrawl-api` if you write integrations) into `~/.agents/skills/`, then connect the server:

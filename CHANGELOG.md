@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.3
+
+- README: how to add PageCrawl to ChatGPT, with the connector and the `pagecrawl-skill.zip` upload. Each release now carries `pagecrawl-skill.zip`, the `pagecrawl` skill on its own.
+
 ## 1.1.2
 
 - The PHP webhook receiver is now a short checklist that links to the complete example in the help center.
