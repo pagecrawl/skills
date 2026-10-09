@@ -5,7 +5,7 @@ license: MIT
 compatibility: Needs network access to pagecrawl.io and a PageCrawl API token created in Settings > API.
 metadata:
   author: PageCrawl.io
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # PageCrawl API
@@ -13,7 +13,7 @@ metadata:
 For code that talks to PageCrawl. To use PageCrawl from a conversation through its MCP tools, use the `pagecrawl` skill instead.
 
 - Base URL: `https://pagecrawl.io/api`
-- Auth header: `Authorization: Bearer $PAGECRAWL_API_TOKEN`. The user creates the token in PageCrawl under Settings > API. It works on every plan.
+- Auth header: `Authorization: Bearer <api-token>`, where `<api-token>` is a token the user creates in PageCrawl under Settings > API. It works on every plan.
 - Full specification: https://pagecrawl.io/api/openapi.yaml. Fetch it when you need exact request or response fields; it is the contract.
 - Several workspaces: add `workspace_id` as a query parameter.
 
@@ -32,7 +32,7 @@ The quick endpoint needs only a URL:
 
 ```bash
 curl -X POST "https://pagecrawl.io/api/track-simple" \
-  -H "Authorization: Bearer $PAGECRAWL_API_TOKEN" \
+  -H "Authorization: Bearer <api-token>" \
   -H "Content-Type: application/json" \
   -d '{"url": "https://example.com/pricing", "tracking_mode": "content_only", "frequency": 1440,
        "ai_page_focus": "Plan prices and limits; ignore testimonials"}'

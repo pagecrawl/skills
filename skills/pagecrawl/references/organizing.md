@@ -16,18 +16,19 @@ Folders (`manage-folders`):
 - Start with `manage-folders(action="list")` to see the tree before changing it.
 - `manage-folders(action="create", name="Competitors", parent="Research")` nests a folder; omit `parent` for the top level.
 - `manage-folders(action="move", folder="Competitors", monitor_ids=[...])` moves up to 50 monitors. A destination that does not exist is created at the top level. An empty `folder` removes monitors from any folder.
-- `rename` and `reparent` change a folder; `delete` removes it and its subfolders, and the monitors inside stay but lose their folder. Confirm before deleting.
+- `rename` and `reparent` change a folder. `manage-folders(action="reparent", folder="Competitors", target_workspace_id=...)` moves the folder, its subfolders and every monitor in them to another workspace of the same team.
+- `delete` removes a folder and its subfolders, and the monitors inside stay but lose their folder. Confirm before deleting.
 - `list-monitors(folder="Competitors")` includes monitors in subfolders.
 
 Tags (`manage-tags`):
 
-- `manage-tags(action="list")` shows the workspace's tags.
-- `manage-tags(action="add", monitor_id="...", tags=["pricing"])` and `manage-tags(action="remove", monitor_id="...", tags=["pricing"])` work on one monitor at a time.
+- `manage-tags(action="list")` shows the current workspace's tags; pass `workspace_id` for another workspace.
+- `manage-tags(action="add", monitor_ids=[...], tags=["pricing"])` tags up to 50 monitors in one call, and `action="remove"` untags them. Use `monitor_id` for a single monitor. The monitors can be in different workspaces: each one gets the tag of its own workspace, created there when missing.
 
 ## Editing, pausing and removing monitors
 
 - `manage-monitors(action="update", monitor_id="...", frequency=60)` changes the name, URL, frequency, notifications, screenshots, `ai_page_focus`, folder or enabled state. It cannot change what the monitor tracks; for that, create a corrected monitor.
-- `set-monitor-status(monitor_id="...", enabled=false)` stops checks and keeps the monitor and its history, freeing a slot in the plan's active monitor count. Turning it back on counts against that limit again.
+- `set-monitor-status(monitor_ids=[...], enabled=false)` stops checks on up to 50 monitors (or pass `monitor_id` for one) and keeps them with their history, freeing slots in the plan's active monitor count. Each monitor comes back with its own result. Turning monitors back on counts against that limit again, and enabling stops when the limit is reached.
 - `manage-monitors(action="clear-history", monitor_id="...")` erases stored checks and values but keeps the monitor. `manage-monitors(action="delete", monitor_ids=[...])` removes monitors with all their history, screenshots and values. Both are permanent and accept up to 50 monitors: confirm first, naming the monitors.
 
 ## Templates and page discovery
@@ -46,7 +47,8 @@ Help: https://pagecrawl.io/help/features/article/page-discovery
 
 ## Workspaces
 
-- `list-workspaces` shows teams and workspaces with their IDs and monitor counts. Read and action tools work across all of them; only `add-page-monitor` needs `workspace_id`.
+- `list-workspaces` shows teams and workspaces with their IDs and monitor counts. Read and action tools work across all of them; `add-page-monitor` and moving monitors take a `workspace_id`.
+- `manage-monitors(action="move", monitor_ids=[...], workspace_id=..., folder="Clients")` moves up to 50 monitors to another workspace, including one in another of the user's teams; omit `folder` to place them at the top level. Their history, review status and tags go with them, while alert channels, AI settings and reports come from the new workspace, so confirm with the user first. Monitors made from a template move together with their template: select all of them, or move their folder with `manage-folders` reparent and `target_workspace_id`.
 - `manage-workspaces(action="create", name="Client: Example")` adds one; `manage-workspaces(action="update", timezone="Europe/London")` changes the timezone that schedules and report dates use.
 - `manage-workspaces(action="delete", workspace_id=..., confirm=true)` permanently deletes every monitor in it with their history. Check what it contains and confirm with the user first. The last workspace in a team cannot be deleted.
 - Creating and deleting workspaces needs the team owner or manager role.

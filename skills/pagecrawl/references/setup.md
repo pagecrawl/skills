@@ -28,7 +28,7 @@ codex mcp login pagecrawl
 # OpenClaw (API token)
 openclaw mcp set pagecrawl --transport streamable-http \
   --url https://mcp.pagecrawl.io/mcp \
-  --header "Authorization: Bearer $PAGECRAWL_API_TOKEN"
+  --header "Authorization: Bearer <api-token>"
 ```
 
 Editors that read an `mcpServers` JSON file (Cursor, Windsurf, Cline and others):

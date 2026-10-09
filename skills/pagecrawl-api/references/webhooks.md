@@ -13,7 +13,7 @@
 
 ```bash
 curl -X POST "https://pagecrawl.io/api/hooks" \
-  -H "Authorization: Bearer $PAGECRAWL_API_TOKEN" \
+  -H "Authorization: Bearer <api-token>" \
   -H "Content-Type: application/json" \
   -d '{"target_url": "https://your-server.example.com/pagecrawl", "match_type": "all", "event_type": "change_detected"}'
 ```

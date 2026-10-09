@@ -5,7 +5,7 @@ license: MIT
 compatibility: Requires the PageCrawl MCP server (https://mcp.pagecrawl.io/mcp), connected with OAuth or a PageCrawl API token.
 metadata:
   author: PageCrawl.io
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # PageCrawl
@@ -23,8 +23,9 @@ If no PageCrawl tools are available, read [references/setup.md](references/setup
    - Deleting folders, templates, discovered pages, webhooks or reports.
    - `mark-changes-seen` without `monitor_id`: it clears unreviewed changes on every monitor in every workspace.
    - `manage-webhooks` test (sends a real request) and `manage-reports` generate (delivers the digest to the report's channels).
+   - `manage-monitors` move: the monitors then alert through the new workspace's channels and appear in its reports.
 4. **Never ask for site passwords or other credentials.** The user creates logins in the PageCrawl app. Find existing ones with `list-authentications` and pass the `auth_id`.
-5. **Use the lightest tool and batch.** `get-latest-values`, `get-monitor-details` and `get-monitor-history` accept `monitor_ids` (up to 50). Make one cross-monitor call rather than one call per monitor.
+5. **Use the lightest tool and batch.** `get-latest-values`, `get-monitor-details` and `get-monitor-history` accept `monitor_ids` (up to 50), and so do the bulk changes: `set-monitor-status`, `manage-tags` add and remove, `manage-folders` move, and `manage-monitors` move, delete and clear-history. Make one cross-monitor call rather than one call per monitor.
 6. **Let the schedule do the work.** Use `trigger-check` only for a single check the user asked for, never in a loop. To check more often, change the monitor's `frequency`. If a tool reports a plan limit or quota, tell the user what it said and do not retry.
 7. **Describe timing accurately.** Alerts are sent after the next scheduled check detects a change. A new monitor's first check usually finishes within a few minutes; look once rather than polling.
 
@@ -107,6 +108,6 @@ Use `get-summary` and `get-statistics` for the overall picture, `list-monitors` 
 - `frequency` is in minutes. Allowed values depend on the user's plan, and an error names the limit.
 - `unseen` counts changes the user has not reviewed. `failed` counts consecutive failed checks; 0 is healthy.
 - `status` is `ok`, `unchanged` or `pending` when healthy. Anything else needs attention.
-- Only creating a monitor needs `workspace_id`, and only when the user has more than one workspace.
+- Creating a monitor needs `workspace_id` only when the user has more than one workspace; moving monitors needs it to name the destination. Every other tool finds monitors in any workspace.
 - One URL can have several monitors (for example page text and price). Ask which one when it matters.
 - Over the plan's monitor limit, `add-page-monitor` creates the monitor disabled and says so. Tell the user rather than retrying.

@@ -6,7 +6,7 @@ A data source is a monitor that receives values instead of crawling a page. Push
 
 ```bash
 curl -X POST "https://pagecrawl.io/api/data-sources" \
-  -H "Authorization: Bearer $PAGECRAWL_API_TOKEN" \
+  -H "Authorization: Bearer <api-token>" \
   -H "Content-Type: application/json" \
   -d '{"name": "Warehouse stock", "fields": [{"label": "units", "type": "number"}]}'
 ```
