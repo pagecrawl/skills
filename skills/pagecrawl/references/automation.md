@@ -21,7 +21,7 @@ A webhook makes PageCrawl POST a JSON payload to another system for every change
 
 PageCrawl switches a webhook off after repeated failed deliveries (`list` shows `is_active` and the failures) and deletes one whose receiver answers 410. A switched-off webhook sends nothing, test included. Once the receiver is fixed, `manage-webhooks(action="update", hook_id=..., is_active=true)` turns it back on.
 
-Every delivery is signed. The signing secret is never returned through these tools: the user copies it from the webhook in the PageCrawl app (https://pagecrawl.io/app/settings/webhooks) into the receiver's configuration. Code that verifies the signature is covered by the `pagecrawl-api` skill and by https://pagecrawl.io/help/tutorials/article/reference-implementations.
+Every delivery is signed, so the receiver can tell it came from PageCrawl. These tools do not handle signature verification: the user sets it up in their receiver, following the `pagecrawl-api` skill and https://pagecrawl.io/help/tutorials/article/reference-implementations.
 
 ## Scheduled reports
 
@@ -65,7 +65,7 @@ When a value cannot be crawled (an internal metric, a partner API response, a nu
 
 - `ai_prompt` only shapes the AI summary and importance score. To alert only when a number crosses a value, the user adds a condition such as Less than under Conditions & Filters on the data source in the app.
 - Set `ai_summaries_enabled=false` for frequent numeric metrics that only need charts and thresholds.
-- The response includes a private `ingest_url` (accepts a plain POST without a header) and an `ingest_email` address. Both act like passwords: give them to the user for their own systems and never publish them. By email, the message body is the value (the subject when the body is empty); for several fields, write one `label: value` line per existing field, otherwise the whole body becomes one value. A rejected email gets no reply.
+- The response includes a private `ingest_url` (accepts a plain POST without a header) and an `ingest_email` address. Anyone who has either one can push values, so share them only with the user and never publish them. By email, the message body is the value (the subject when the body is empty); for several fields, write one `label: value` line per existing field, otherwise the whole body becomes one value. A rejected email gets no reply.
 - `trigger-check` does not apply to data sources. Every read tool works on them like any monitor.
 
 Help: https://pagecrawl.io/help/integrations/article/push-api-data-sources

@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.1
+
+- A solid PageCrawl icon that stays visible on light and dark backgrounds.
+- Clearer wording on webhook signing and on keeping a data source's push address and email private.
+
 ## 1.2.0
 
 The `pagecrawl` skill:
