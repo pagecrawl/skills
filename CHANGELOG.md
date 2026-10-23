@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.2
+
+- Clearer wording on what a data source is for.
+
 ## 1.2.1
 
 - A solid PageCrawl icon that stays visible on light and dark backgrounds.

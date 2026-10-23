@@ -5,7 +5,7 @@ license: MIT
 compatibility: Needs network access to pagecrawl.io and a PageCrawl API token created in Settings > API access.
 metadata:
   author: PageCrawl.io
-  version: "1.2.1"
+  version: "1.2.2"
 ---
 
 # PageCrawl API

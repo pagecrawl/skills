@@ -57,9 +57,9 @@ When an automation must pull rather than receive, use the cursor:
 
 ## Push data sources
 
-When a value cannot be crawled (an internal metric, a partner API response, a number from a spreadsheet), create a data source and push values to it. Pushed values get the same history, charts, alerts and AI summaries as any monitor.
+When a value does not come from a web page, such as a stock count or a sales figure the user gives you, create a data source and record values to it. Pushed values get the same history, charts, alerts and AI summaries as any monitor.
 
-1. `create-data-source(name="Warehouse stock", fields=[{"label": "units", "type": "number"}], ai_prompt="Units in stock at the main warehouse; drops matter more than rises")`. Field types are `number`, `price` and `text`; define number and price fields up front for values such as $12.99. A data source alerts like a new monitor, through the saved default or else email plus every connected chat channel; pass `notifications` to choose, or `[]` for none. At a plan limit it is not created: pass on the message.
+1. `create-data-source(name="Warehouse stock", fields=[{"label": "units", "type": "number"}], ai_prompt="Units in stock at the main warehouse; drops matter more than rises")`. Field types are `number`, `price` and `text`; define number and price fields up front for values such as 12.99. A data source alerts like a new monitor, through the saved default or else email plus every connected chat channel; pass `notifications` to choose, or `[]` for none. At a plan limit it is not created: pass on the message.
 2. `record-data(monitor_id="...", value="128")` fills the only field, or creates one named Value on a source without fields. On a source with several fields, pass `values` keyed by field label, for example `record-data(monitor_id="...", values={"units": "128", "status": "ok"})`, because a bare `value` there adds a new Value field. A label that does not exist yet becomes a new field, typed as a number only when the value is a plain number such as 1299.
 3. Recording the same value again returns `changed=false` and adds nothing to the history, but every push counts toward the plan's check allowance, so push on a schedule that matches how often the value moves. `return_summary=true` also returns the AI summary and score of a recorded change.
 
